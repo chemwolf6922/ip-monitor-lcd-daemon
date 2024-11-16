@@ -1,3 +1,5 @@
 /.vscode
 /*.o
+/*.d
 /ip_monitor
+/fake_dev

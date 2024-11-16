@@ -102,7 +102,16 @@ static int ip_renderer_render_ip(ip_renderer_t* base, lcd_frame_buffer_t* fb, co
 
 static void ip_renderer_rotate_clockwise(ip_renderer_t* base, lcd_frame_buffer_t* fb)
 {
-
+    lcd_frame_buffer_t tmp;
+    memcpy(&tmp, fb, sizeof(lcd_frame_buffer_t));
+    for(int i = 0; i < FRAME_BUFFER_WIDTH; i++)
+    {
+        for(int j = 0; j < FRAME_BUFFER_HEIGHT; j++)
+        {
+            fb->pixels[i * FRAME_BUFFER_HEIGHT + j] = 
+                tmp.pixels[(FRAME_BUFFER_HEIGHT - j - 1) * FRAME_BUFFER_WIDTH + i];
+        }
+    }    
 }
 
 static double get_perfect_font_size(SFT* sft, const char* str, int width, int height)

@@ -1,0 +1,42 @@
+diff --git a/.gitignore b/.gitignore
+index 5a2a59e..3129933 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,5 +1,6 @@
+ *.o
+ libschrift.a
++libschrift.pc
+ /demo
+ /stress
+ schrift-*.tar.gz
+diff --git a/config.mk b/config.mk
+index 2276d4f..a496eae 100644
+--- a/config.mk
++++ b/config.mk
+@@ -1,9 +1,9 @@
+ # Customize below to fit your system
+ 
+ # compiler and linker
+-CC = cc
+-LD = cc
+-AR = ar
++CC? = cc
++LD? = cc
++AR? = ar
+ RANLIB = ranlib
+ 
+ # installation paths
+@@ -11,9 +11,10 @@ PREFIX = /usr/local
+ MANPREFIX = $(PREFIX)/share/man
+ 
+ # compiler flags for libschrift
+-CPPFLAGS =
+-CFLAGS   = -Os -std=c99 -pedantic -Wall -Wextra -Wconversion
+-LDFLAGS  = -Os
++CPPFLAGS? =
++CFLAGS?   = -Os 
++override CFLAGS += -std=c99 -pedantic -Wall -Wextra -Wconversion
++LDFLAGS?  = -Os
+ 
+ # compiler flags for the demo & stress test applications
+ EXTRAS_CPPFLAGS = -I./

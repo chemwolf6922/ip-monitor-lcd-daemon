@@ -13,11 +13,12 @@ int main(int argc, char const *argv[])
         return 1;
     if(renderer->render_ip(renderer, &fb, &ip)<0)
         return 1;
+    renderer->rotate_clockwise(renderer, &fb);
     renderer->destroy(renderer);
 
     /** dump the fb to ppm */
     printf("P3\n");
-    printf("%d %d\n", FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT);
+    printf("%d %d\n", FRAME_BUFFER_HEIGHT, FRAME_BUFFER_WIDTH);
     printf("255\n");
     for(int i = 0; i < FRAME_BUFFER_WIDTH * FRAME_BUFFER_HEIGHT; i++)
     {

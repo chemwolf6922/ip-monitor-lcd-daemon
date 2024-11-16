@@ -10,6 +10,11 @@
 #include <ifaddrs.h>
 #include "ip_monitor.h"
 
+// Only to make intellisense happy
+#ifndef IFNAMSIZ
+#define IFNAMSIZ 16
+#endif
+
 typedef struct
 {
     ip_monitor_t base;
