@@ -2,3 +2,6 @@
 [submodule "libschrift"]
 	path = libschrift
 	url = https://github.com/tomolt/libschrift.git
+[submodule "tev"]
+	path = tev
+	url = https://github.com/chemwolf6922/tiny-event-loop.git
