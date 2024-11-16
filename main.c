@@ -15,12 +15,12 @@ static tev_handle_t tev = NULL;
 static ip_monitor_t* ip_monitor = NULL;
 static ip_renderer_t* ip_renderer = NULL;
 static char* lcd_device = NULL;
-static struct in_addr ip = {0};
+static struct in_addr current_ip = {0};
 static tev_timeout_handle_t display_ip_retry_timer = NULL;
 
 static void on_ip_change(const struct in_addr* ip, void* ctx);
 static void try_display_ip(void* );
-static int display_ip(const struct in_addr* ip);
+static int display_ip();
 
 int main(int argc, char const *argv[])
 {
@@ -64,7 +64,7 @@ int main(int argc, char const *argv[])
     if(!ip_renderer)
         return -1;
 
-    ip_monitor->get_ip(ip_monitor, &ip);
+    ip_monitor->get_ip(ip_monitor, &current_ip);
     try_display_ip(NULL);
 
     tev_main_loop(tev);
@@ -76,23 +76,24 @@ int main(int argc, char const *argv[])
 
 static void on_ip_change(const struct in_addr* ip, void* ctx)
 {
-    memcpy(&ip, ip, sizeof(ip));
+    memcpy(&current_ip, ip, sizeof(current_ip));
     try_display_ip(NULL);
 }
 
 static void try_display_ip(void* )
 {
     tev_clear_timeout(tev, display_ip_retry_timer);
-    if(display_ip(&ip) != 0)
+    if(display_ip() != 0)
     {
         display_ip_retry_timer = tev_set_timeout(tev, try_display_ip, NULL, 5000);
     }
 }
 
-static int display_ip(const struct in_addr* ip)
+static int display_ip()
 {
     static lcd_frame_buffer_t fb = {0};
-    if(ip_renderer->render_ip(ip_renderer, &fb, ip) < 0)
+    memset(&fb, 0, sizeof(fb));
+    if(ip_renderer->render_ip(ip_renderer, &fb, &current_ip) < 0)
         return -1;
     ip_renderer->rotate_clockwise(ip_renderer, &fb);
     struct stat st = {0};
@@ -101,6 +102,7 @@ static int display_ip(const struct in_addr* ip)
     FILE* lcd = fopen(lcd_device, "w");
     if(!lcd)
         return -1;
+    rewind(lcd);
     size_t write_len = fwrite(fb.data, 1, sizeof(fb.data), lcd);
     fflush(lcd);
     fclose(lcd);

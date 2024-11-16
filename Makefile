@@ -1,6 +1,6 @@
 CFLAGS?= -O3
 APP_CFLAGS:=$(CFLAGS) -MMD -MP
-LDFLAGS?=
+LDFLAGS?=-s
 APP_LDFLAGS:=$(LDFLAGS) -lm
 
 APP=ip_monitor
