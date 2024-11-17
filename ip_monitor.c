@@ -97,6 +97,7 @@ static int ip_monitor_get_ip(ip_monitor_t* base, struct in_addr* ip)
             continue;
         struct sockaddr_in* addr = (struct sockaddr_in*)ifa->ifa_addr;
         memcpy(ip, &addr->sin_addr, sizeof(*ip));
+        memcpy(&this->ip, &addr->sin_addr, sizeof(*ip));
         break;
     }
     freeifaddrs(ifaddr);
